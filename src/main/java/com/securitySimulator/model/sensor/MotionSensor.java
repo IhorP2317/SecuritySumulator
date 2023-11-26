@@ -1,12 +1,7 @@
 package com.securitySimulator.model.sensor;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -17,12 +12,14 @@ import java.time.LocalDateTime;
 //@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 @Entity
-//@DiscriminatorValue("MOTION")
+@DiscriminatorValue("MOTION")
 public class MotionSensor extends Sensor {
-    @Column
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Getter
+//    Integer id;
     LocalDateTime curfewStart;
-    @Column
      LocalDateTime curfewEnd;
 }

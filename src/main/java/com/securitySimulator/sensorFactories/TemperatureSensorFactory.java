@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Constructor;
-@Data
-@NoArgsConstructor
-public class TemperatureSensorFactory implements SensorFactory{
-    @Override
-    public Sensor createSensor(String sensorType) {
-        if ("TEMPERATURE".equals(sensorType)) {
-            return new TemperatureSensor();
-        }
-        return null; // Handle other sensor types if needed
-    }
-}
+//@Data
+//@NoArgsConstructor
+//public class TemperatureSensorFactory implements SensorFactory{
+//    @Override
+//    public Sensor createSensor(String sensorType) {
+//        if ("TEMPERATURE".equals(sensorType)) {
+//            return new TemperatureSensor();
+//        }
+//        return null; // Handle other sensor types if needed
+//    }
+//}

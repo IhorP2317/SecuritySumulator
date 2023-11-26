@@ -9,18 +9,17 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 
-@Data
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "sensor_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "Sensors")
-//@DiscriminatorColumn(name = "sensor_type")
-//@DiscriminatorValue("SENSOR")
 public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
+    @Setter
     Integer id;
     @Column
     @Getter

@@ -1,5 +1,6 @@
 package com.securitySimulator.controller;
 
+import com.securitySimulator.helpers.RoomHelper;
 import com.securitySimulator.model.entities.Room;
 import com.securitySimulator.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rooms")
-@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
 @ComponentScan
 public class RoomController {
 
@@ -51,15 +51,28 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Room> createRoom(@RequestBody Room Room) {
+    public ResponseEntity<String> createRoom(@RequestBody Room room) {
         try {
-            Room _Room = roomRepository
-                    .save(new Room(Room.getId(), Room.getSquare(), Room.getAmountOfDoors(), Room.getAmountOfWindows(), Room.getNormativeType(), Room.getSensorsForRoom()));
-            return new ResponseEntity<>(_Room, HttpStatus.CREATED);
+            Room newRoom = new Room(
+                    room.getId(),
+                    room.getSquare(),
+                    room.getAmountOfDoors(),
+                    room.getAmountOfWindows(),
+                    room.getNormativeType(),
+                    new ArrayList<>()
+            );
+
+            RoomHelper.populateSensorsForRoom(newRoom);
+
+            Room _room = roomRepository.save(newRoom);
+            return new ResponseEntity<>(_room.toString(), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Room> updateRoom(@PathVariable("id") long id, @RequestBody Room Room) {

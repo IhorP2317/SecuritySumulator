@@ -12,12 +12,12 @@ import lombok.experimental.FieldDefaults;
 /**
  * @author rom4ik
  */
-@Data
+//@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@DiscriminatorValue("TEMPERATURE")
+//@DiscriminatorValue("TEMPERATURE")
 public class TemperatureSensor extends Sensor {
     @Column
     Double currentTemperature;

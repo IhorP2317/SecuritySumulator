@@ -1,36 +1,61 @@
 package com.securitySimulator.model.user;
+
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "Users")
-public class User implements Serializable {
-    static final Long serialVersionUID = 572257273198993868L;
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
+public class User {
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    @Column
+    private Long id;
+
+    @Getter
+    @Setter
+    @NotBlank
+    @Size(max = 20)
     private String username;
 
-    @Column
+    @Getter
+    @Setter
+    @NotBlank
+    @Size(max = 50)
+    @Email
     private String email;
 
-    @Column
+    @Getter
+    @Setter
+    @NotBlank
+    @Size(max = 120)
     private String password;
 
-    @Column
-    private String phoneNumber;
+    @Getter
+    @Setter
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

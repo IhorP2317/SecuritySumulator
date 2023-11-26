@@ -12,14 +12,14 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
 /**
- * @author rom4ik
+ * @author vasya pupkin
  */
-@Data
+//@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@DiscriminatorValue("MOTION")
+//@DiscriminatorValue("MOTION")
 public class MotionSensor extends Sensor {
     @Column
     LocalDateTime curfewStart;

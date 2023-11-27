@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.securitySimulator.exception.TokenRefreshException;
 import com.securitySimulator.model.user.ERole;
+import com.securitySimulator.model.user.RefreshToken;
 import com.securitySimulator.model.user.Role;
 import com.securitySimulator.model.user.User;
 import com.securitySimulator.payload.request.LoginRequest;
 import com.securitySimulator.payload.request.SignupRequest;
+import com.securitySimulator.payload.request.TokenRefreshRequest;
 import com.securitySimulator.payload.response.JwtResponse;
 import com.securitySimulator.payload.response.MessageResponse;
+import com.securitySimulator.payload.response.TokenRefreshResponse;
 import com.securitySimulator.repository.RoleRepository;
 import com.securitySimulator.repository.UserRepository;
 import com.securitySimulator.security.jwt.JwtUtils;
+//import com.securitySimulator.security.services.RefreshTokenService;
 import com.securitySimulator.security.services.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,26 +58,45 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+//    @Autowired
+//    RefreshTokenService refreshTokenService;
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+//    @PostMapping("/signin")
+//    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+//
+//        Authentication authentication = authenticationManager
+//                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//
+//        String jwt = jwtUtils.generateJwtToken(userDetails);
+//
+//        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+//                .collect(Collectors.toList());
+//
+//        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+//
+//        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
+//                userDetails.getUsername(), userDetails.getEmail(), roles));
+//    }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
-    }
+//    @PostMapping("/refreshtoken")
+//    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+//        String requestRefreshToken = request.getRefreshToken();
+//
+//        return refreshTokenService.findByToken(requestRefreshToken)
+//                .map(refreshTokenService::verifyExpiration)
+//                .map(RefreshToken::getUser)
+//                .map(user -> {
+//                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+//                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+//                })
+//                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+//                        "Refresh token is not in database!"));
+//    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -88,7 +112,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));

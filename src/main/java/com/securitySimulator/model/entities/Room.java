@@ -60,9 +60,4 @@ public class Room {
         this.normativeType = normativeType;
         this.sensorsForRoom = sensorsForRoom;
     }
-
-
-//    public int getAmountOfHoles() {
-//        return amountOfDoors + amountOfWindows;
-//    }
 }

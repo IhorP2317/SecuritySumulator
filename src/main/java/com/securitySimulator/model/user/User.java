@@ -42,6 +42,9 @@ public class User {
     @Size(max = 120)
     private String password;
 
+//    @OneToOne(mappedBy = "user")
+//    private RefreshToken refreshToken;
+
     @Getter
     @Setter
     @ManyToMany(fetch = FetchType.LAZY)

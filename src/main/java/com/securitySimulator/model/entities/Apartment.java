@@ -19,21 +19,14 @@ import java.util.List;
 public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     Integer id;
-    @Getter
-    @Setter
+
     String address;
 
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id")
     Building building;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Floor> floors;
 

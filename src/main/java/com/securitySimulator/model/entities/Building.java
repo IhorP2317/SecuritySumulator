@@ -14,15 +14,11 @@ import java.util.List;
 @Table(name = "Buildings")
 public class Building {
     @Id
-    @Getter
-    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Getter
-    @Setter
+
     String coordinates;
-    @Getter
-    @Setter
+
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Apartment> apartments;
 

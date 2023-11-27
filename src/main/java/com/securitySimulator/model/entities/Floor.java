@@ -20,23 +20,15 @@ import java.util.List;
 @Table(name = "Floors")
 public class Floor {
     @Id
-    @Getter
-    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Getter
-    @Setter
-    @Column
+
     Integer number;
 
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")
     Apartment apartment;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL)
     List<Room> rooms;
 

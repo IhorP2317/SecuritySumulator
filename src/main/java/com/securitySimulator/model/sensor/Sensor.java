@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
-
+@Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PROTECTED)
 @Entity
@@ -18,26 +18,18 @@ import jakarta.persistence.Entity;
 public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     Integer id;
-    @Column
-    @Getter
+
     String name;
-    @Column
-    @Getter
+
     LocalDateTime activationStart;
-    @Column
-    @Getter
+
     LocalDateTime activationEnd;
-    @Column
-    @Getter
+
     Double workingArea;
-    @Column
-    @Getter
+
     Boolean isViolationDetected;
 
-    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     Room room;

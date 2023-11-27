@@ -4,57 +4,46 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
+@NoArgsConstructor
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
 public class User {
-    @Getter
-    @Setter
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
-    @Setter
     @NotBlank
     @Size(max = 20)
     private String username;
 
-    @Getter
-    @Setter
     @NotBlank
     @Size(max = 50)
     @Email
     private String email;
 
-    @Getter
-    @Setter
     @NotBlank
     @Size(max = 120)
     private String password;
 
-//    @OneToOne(mappedBy = "user")
-//    private RefreshToken refreshToken;
-
-    @Getter
-    @Setter
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
-    public User() {
-    }
 
     public User(String username, String email, String password) {
         this.username = username;

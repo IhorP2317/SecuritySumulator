@@ -20,35 +20,21 @@ import java.util.List;
 @Table(name = "Rooms")
 public class Room {
     @Id
-    @Getter
-    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Getter
-    @Setter
-    @Column
+
     Double square;
 
-    @Getter
-    @Setter
-    @Column
     Integer amountOfDoors;
-    @Getter
-    @Setter
-    @Column
+
     Integer amountOfWindows;
-    @Getter
-    @Setter
+
     NormativeType normativeType;
 
-    @Getter
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id")
     Floor floor;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Sensor> sensorsForRoom;
 

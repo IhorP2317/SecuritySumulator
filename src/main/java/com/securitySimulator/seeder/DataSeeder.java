@@ -118,7 +118,7 @@ public class DataSeeder{
                 tmpTo = apartments.size();
             }
 
-            var newbuilding = new Building("address", getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")));
+            var newbuilding = new Building("address", getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
             var apartlist = apartments.subList(tmpFrom, tmpTo);
 
             apartlist.forEach(a -> a.setBuilding(newbuilding));

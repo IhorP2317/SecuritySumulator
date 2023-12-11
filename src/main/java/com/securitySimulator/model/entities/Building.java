@@ -22,8 +22,8 @@ public class Building extends BuildingComposite{
     Integer id;
 
     String address;
-    BigDecimal coordinateX;
-    BigDecimal coordinateY;
+    String coordinateX;
+    String coordinateY;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<Apartment> apartments;
@@ -33,7 +33,7 @@ public class Building extends BuildingComposite{
     User user;
 
 
-    public Building(String address, BigDecimal coordinateX, BigDecimal coordinateY){
+    public Building(String address, String coordinateX, String coordinateY){
         this.address = address;
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;

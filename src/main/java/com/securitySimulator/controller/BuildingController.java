@@ -54,7 +54,7 @@ public class BuildingController {
     public ResponseEntity<Building> createBuilding(@RequestBody Building Building) {
         try {
             Building _Building = buildingRepository
-                    .save(new Building(Building.getId(), Building.getCoordinates(), Building.getApartments()));
+                    .save(new Building(Building.getId(), Building.getAddress(), Building.getCoordinateX(), Building.getCoordinateY(), Building.getApartments(), Building.getUser()));
             return new ResponseEntity<>(_Building, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -67,7 +67,8 @@ public class BuildingController {
 
         if (BuildingData.isPresent()) {
             Building _Building = BuildingData.get();
-            _Building.setCoordinates(Building.getCoordinates());
+            _Building.setCoordinateX(Building.getCoordinateX());
+            _Building.setCoordinateY(Building.getCoordinateY());
             return new ResponseEntity<>(buildingRepository.save(_Building), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

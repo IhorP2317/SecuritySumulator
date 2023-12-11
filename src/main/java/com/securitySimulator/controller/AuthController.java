@@ -19,26 +19,20 @@ import com.securitySimulator.payload.response.TokenRefreshResponse;
 import com.securitySimulator.repository.RoleRepository;
 import com.securitySimulator.repository.UserRepository;
 import com.securitySimulator.security.jwt.JwtUtils;
-//import com.securitySimulator.security.services.RefreshTokenService;
 import com.securitySimulator.security.services.RefreshTokenService;
 import com.securitySimulator.security.services.UserDetailsImpl;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -146,5 +140,15 @@ public class AuthController {
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
+    }
+
+    @DeleteMapping("/refreshtoken/{id}")
+    public ResponseEntity<?> deleterRefreshToken(@PathVariable("id") long id) {
+        try {
+            refreshTokenService.deleteByUserId(id);
+            return ResponseEntity.ok(new MessageResponse("refresh token deleted successfully sweaty balls"));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

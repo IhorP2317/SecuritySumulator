@@ -1,5 +1,6 @@
 package com.securitySimulator.model.entities;
 
+import com.securitySimulator.model.sensor.Sensor;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import jakarta.persistence.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,23 +18,38 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Apartments")
-public class Apartment {
+public class Apartment extends BuildingComposite{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    String address;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "building_id")
     Building building;
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<Floor> floors;
 
-    public Apartment(Integer id, String address, List<Floor> floors) {
+    public Apartment(Integer id, List<Floor> floors) {
         this.id = id;
-        this.address = address;
         this.floors = floors;
+    }
+
+    public Apartment(List<Floor> floors) {
+        this.floors = floors;
+    }
+
+    @Override
+    public List<Sensor> getAllSensors() {
+        List<Sensor> sensors = new ArrayList<>();
+
+        floors.forEach(f -> sensors.addAll(f.getAllSensors()));
+
+        return sensors;
+    }
+
+    @Override
+    public String getFullAddress() {
+        return building != null ? building.getFullAddress() + ' ' + getId().toString() : "";
     }
 }

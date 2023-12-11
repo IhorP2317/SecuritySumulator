@@ -2,9 +2,9 @@ package com.securitySimulator.helpers;
 
 import com.securitySimulator.model.entities.Room;
 import com.securitySimulator.model.enums.NormativeType;
-import com.securitySimulator.model.sensor.MotionSensor;
 import com.securitySimulator.model.sensor.Sensor;
-import com.securitySimulator.model.sensor.TemperatureSensor;
+import com.securitySimulator.sensorFactories.FactoryProducer;
+import com.securitySimulator.sensorFactories.SensorFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,30 +15,30 @@ public class RoomHelper {
         int totalSensors = room.getAmountOfDoors() * room.getAmountOfWindows();
         List<Sensor> sensors = new ArrayList<>();
 
-        // Populate sensors based on normativeType
+        SensorFactory sensorFactory1 = FactoryProducer.getFactory(true);
+        SensorFactory sensorFactory2 = FactoryProducer.getFactory(false);
+
         if (room.getNormativeType() == NormativeType.Common) {
-            // Common: MotionSensors only
             for (int i = 0; i < totalSensors / 2; i++) {
-                sensors.add(new MotionSensor());
+                sensors.add(sensorFactory1.createSensor());
             }
         } else if (room.getNormativeType() == NormativeType.Premium) {
-            // Premium: Half MotionSensors, Half TemperatureSensors
             for (int i = 0; i < totalSensors / 2; i++) {
-                sensors.add(new MotionSensor());
+                sensors.add(sensorFactory1.createSensor());
             }
             for (int i = 0; i < totalSensors / 2; i++) {
-                sensors.add(new TemperatureSensor());
+                sensors.add(sensorFactory2.createSensor());
             }
         } else if (room.getNormativeType() == NormativeType.Advanced) {
-            // Advanced: All MotionSensors and All TemperatureSensors
             for (int i = 0; i < totalSensors; i++) {
-                sensors.add(new MotionSensor());
+                sensors.add(sensorFactory1.createSensor());
             }
             for (int i = 0; i < totalSensors; i++) {
-                sensors.add(new TemperatureSensor());
+                sensors.add(sensorFactory2.createSensor());
             }
         }
-
+        sensors.forEach(s -> s.setRoom(room));
         room.setSensorsForRoom(sensors);
+
     }
 }

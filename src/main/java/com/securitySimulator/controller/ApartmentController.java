@@ -59,7 +59,7 @@ public class ApartmentController {
     public ResponseEntity<Apartment> createApartment(@RequestBody Apartment Apartment) {
         try {
             Apartment _apartment = apartmentRepository
-                    .save(new Apartment(Apartment.getId(), Apartment.getAddress(), Apartment.getFloors()));
+                    .save(new Apartment(Apartment.getId(), Apartment.getFloors()));
             return new ResponseEntity<>(_apartment, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,7 +72,7 @@ public class ApartmentController {
 
         if (ApartmentData.isPresent()) {
             Apartment _Apartment = ApartmentData.get();
-            _Apartment.setAddress(Apartment.getAddress());
+            _Apartment.setFloors(Apartment.getFloors());
             return new ResponseEntity<>(apartmentRepository.save(_Apartment), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

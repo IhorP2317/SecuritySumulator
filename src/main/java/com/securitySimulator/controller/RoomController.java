@@ -26,9 +26,7 @@ public class RoomController {
     @GetMapping
     public ResponseEntity<List<Room>> getAllRooms() {
         try {
-            List<Room> Rooms = new ArrayList<>();
-
-            roomRepository.findAll().forEach(Rooms::add);
+            List<Room> Rooms = new ArrayList<>(roomRepository.findAll());
 
             if (Rooms.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

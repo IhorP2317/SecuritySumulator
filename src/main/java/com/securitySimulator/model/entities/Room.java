@@ -5,20 +5,20 @@ import com.securitySimulator.model.sensor.Sensor;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author lil nigga
- */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Rooms")
-public class Room {
+public class Room extends BuildingComposite{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -31,11 +31,12 @@ public class Room {
 
     NormativeType normativeType;
 
+    @Nullable
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "floor_id")
     Floor floor;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Sensor> sensorsForRoom;
 
     public Room(Integer id, Double square, Integer amountOfDoors, Integer amountOfWindows, NormativeType normativeType, List<Sensor> sensorsForRoom) {
@@ -45,5 +46,23 @@ public class Room {
         this.amountOfWindows = amountOfWindows;
         this.normativeType = normativeType;
         this.sensorsForRoom = sensorsForRoom;
+    }
+
+    public Room(Double square, Integer amountOfDoors, Integer amountOfWindows, NormativeType normativeType){
+        this.square = square;
+        this.amountOfDoors = amountOfDoors;
+        this.amountOfWindows = amountOfWindows;
+        this.normativeType = normativeType;
+    }
+
+    @Transient
+    @Override
+    public List<Sensor> getAllSensors() {
+        return sensorsForRoom;
+    }
+    @Transient
+    @Override
+    public String getFullAddress() {
+        return floor != null ? floor.getFullAddress() + ' ' + getId().toString() : "";
     }
 }

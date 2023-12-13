@@ -1,5 +1,8 @@
 package com.securitySimulator.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.securitySimulator.model.enums.NormativeType;
 import com.securitySimulator.model.sensor.Sensor;
 import jakarta.persistence.*;
@@ -31,12 +34,14 @@ public class Room extends BuildingComposite{
 
     NormativeType normativeType;
 
-    @Nullable
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "floor_id")
+    @JoinColumn(name = "floor_id", referencedColumnName = "id")
+    @JsonBackReference
     Floor floor;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     List<Sensor> sensorsForRoom;
 
     public Room(Integer id, Double square, Integer amountOfDoors, Integer amountOfWindows, NormativeType normativeType, List<Sensor> sensorsForRoom) {
@@ -55,11 +60,13 @@ public class Room extends BuildingComposite{
         this.normativeType = normativeType;
     }
 
+    @JsonIgnore
     @Transient
     @Override
     public List<Sensor> getAllSensors() {
         return sensorsForRoom;
     }
+    @JsonIgnore
     @Transient
     @Override
     public String getFullAddress() {

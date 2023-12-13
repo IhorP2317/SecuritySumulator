@@ -1,5 +1,6 @@
 package com.securitySimulator.model.sensor;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.securitySimulator.model.entities.Room;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,9 +23,13 @@ public class Sensor{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
+    @JsonBackReference
     Room room;
 
     public Sensor(){
     }
-
+    @Override
+    public String toString() {
+        return "";
+    }
 }

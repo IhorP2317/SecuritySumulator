@@ -1,5 +1,8 @@
 package com.securitySimulator.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.securitySimulator.model.sensor.Sensor;
 import jakarta.persistence.*;
 
@@ -25,9 +28,11 @@ public class Apartment extends BuildingComposite{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "building_id")
+    @JsonBackReference
     Building building;
 
     @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     List<Floor> floors;
 
     public Apartment(Integer id, List<Floor> floors) {
@@ -39,6 +44,7 @@ public class Apartment extends BuildingComposite{
         this.floors = floors;
     }
 
+    @JsonIgnore
     @Override
     public List<Sensor> getAllSensors() {
         List<Sensor> sensors = new ArrayList<>();
@@ -47,7 +53,7 @@ public class Apartment extends BuildingComposite{
 
         return sensors;
     }
-
+    @JsonIgnore
     @Override
     public String getFullAddress() {
         return building != null ? building.getFullAddress() + ' ' + getId().toString() : "";

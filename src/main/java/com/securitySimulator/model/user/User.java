@@ -1,5 +1,6 @@
 package com.securitySimulator.model.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.securitySimulator.model.entities.Building;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -42,12 +43,14 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     List<Building> buildings;
 
     @ManyToMany
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonManagedReference
     private Set<Role> roles;
 
     public User(String username, String email, String password, Set<Role> roles) {
@@ -63,4 +66,5 @@ public class User {
         this.password = password;
         this.roles = new HashSet<>();
     }
+
 }

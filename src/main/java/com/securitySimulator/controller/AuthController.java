@@ -1,11 +1,13 @@
 package com.securitySimulator.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.securitySimulator.exception.TokenRefreshException;
+import com.securitySimulator.model.entities.Apartment;
 import com.securitySimulator.model.user.ERole;
 import com.securitySimulator.model.user.RefreshToken;
 import com.securitySimulator.model.user.Role;
@@ -151,4 +153,22 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = new ArrayList<>();
+
+            userRepository.findAll().forEach(users::add);
+
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

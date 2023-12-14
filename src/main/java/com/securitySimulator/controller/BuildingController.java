@@ -1,7 +1,9 @@
 package com.securitySimulator.controller;
 
 import com.securitySimulator.model.entities.Building;
+import com.securitySimulator.model.user.User;
 import com.securitySimulator.repository.BuildingRepository;
+import com.securitySimulator.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ public class BuildingController {
 
     @Autowired
     BuildingRepository buildingRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List<Building>> getAllBuildings() {
@@ -36,6 +40,20 @@ public class BuildingController {
             return new ResponseEntity<>(Buildings, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getBuildingsByUserId/{id}")
+    public ResponseEntity<List<Building>> GetBuildingsByUserId(@PathVariable("id") long id) {
+        Optional<User> UserData = userRepository.findById(id);
+
+        if (UserData.isPresent()) {
+
+            var user = UserData.get();
+
+            return new ResponseEntity<>(user.getBuildings(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

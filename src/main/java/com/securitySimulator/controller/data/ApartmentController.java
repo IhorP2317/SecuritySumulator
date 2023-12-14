@@ -1,4 +1,4 @@
-package com.securitySimulator.controller;
+package com.securitySimulator.controller.data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import com.securitySimulator.repository.ApartmentRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/apartments")
+@RequestMapping("/api/data/apartments")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
 @ComponentScan
 public class ApartmentController {

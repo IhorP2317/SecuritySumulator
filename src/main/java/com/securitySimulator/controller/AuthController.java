@@ -1,9 +1,7 @@
 package com.securitySimulator.controller;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Ref;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.securitySimulator.exception.TokenRefreshException;
@@ -36,7 +34,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -166,6 +163,36 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/userByRefreshToken")
+    public ResponseEntity<User> getUserByRefreshToken(String token) {
+        try {
+            Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(token);
+
+            if (refreshToken.isEmpty() || refreshToken.get().getUser() != null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(refreshToken.get().getUser(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+        try {
+            Optional<User> foundUser = userRepository.findById(id);
+
+            if (foundUser.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

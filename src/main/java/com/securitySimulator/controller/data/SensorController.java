@@ -1,4 +1,4 @@
-package com.securitySimulator.controller;
+package com.securitySimulator.controller.data;
 
 
 import com.securitySimulator.model.sensor.Sensor;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/sensors")
+@RequestMapping("/api/data/sensors")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
 @ComponentScan
 public class SensorController {

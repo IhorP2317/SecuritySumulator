@@ -1,4 +1,4 @@
-package com.securitySimulator.controller;
+package com.securitySimulator.controller.data;
 
 import com.securitySimulator.model.entities.Building;
 import com.securitySimulator.model.user.User;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/buildings")
+@RequestMapping("/api/data/buildings")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
 @ComponentScan
 public class BuildingController {
@@ -44,11 +44,10 @@ public class BuildingController {
     }
 
     @GetMapping("/getBuildingsByUserId/{id}")
-    public ResponseEntity<List<Building>> GetBuildingsByUserId(@PathVariable("id") long id) {
+    public ResponseEntity<List<Building>> getBuildingsByUserId(@PathVariable("id") long id) {
         Optional<User> UserData = userRepository.findById(id);
 
         if (UserData.isPresent()) {
-
             var user = UserData.get();
 
             return new ResponseEntity<>(user.getBuildings(), HttpStatus.OK);
@@ -57,7 +56,7 @@ public class BuildingController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getBuildingById/{id}")
     public ResponseEntity<Building> getBuildingById(@PathVariable("id") long id) {
         Optional<Building> BuildingData = buildingRepository.findById(id);
 

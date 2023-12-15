@@ -118,7 +118,7 @@ public class DataSeeder{
                 tmpTo = apartments.size();
             }
 
-            var newbuilding = new Building(getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
+            var newbuilding = new Building(String.valueOf(getRandomBigDecimalInRange(BigDecimal.valueOf(49.8222835),BigDecimal.valueOf(49.8523979))), String.valueOf(getRandomBigDecimalInRange(BigDecimal.valueOf(24.0210356), BigDecimal.valueOf(24.0485014))));
             var apartlist = apartments.subList(tmpFrom, tmpTo);
 
             apartlist.forEach(a -> a.setBuilding(newbuilding));
@@ -549,23 +549,6 @@ public class DataSeeder{
                 )
         );
 
-        for(int tmpFrom = 0, tmpTo = 0; tmpTo < apartments.size();){
-            tmpTo = random.nextInt(tmpFrom + 1, tmpFrom + 20);
-            if(tmpTo >= apartments.size() - 20){
-                tmpTo = apartments.size();
-            }
-
-            var newbuilding = new Building(getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
-            var apartlist = apartments.subList(tmpFrom, tmpTo);
-
-            apartlist.forEach(a -> a.setBuilding(newbuilding));
-
-            newbuilding.setApartments(apartlist);
-
-            buildings.add(newbuilding);
-            tmpFrom = tmpTo;
-        }
-
         for(int i = 0; i < userData.size(); ++i){
             Role role = roles.get(random.nextInt(0, roles.size()));
             Set<Role> roleSet = new HashSet<>();
@@ -598,10 +581,7 @@ public class DataSeeder{
         BigDecimal scaled = range.multiply(new BigDecimal(random.nextDouble()));
         BigDecimal result = scaled.add(min);
 
-        int scale = 2;
-        RoundingMode roundingMode = RoundingMode.HALF_UP;
-
-        return result.setScale(scale, roundingMode);
+        return result;
     }
 
 }

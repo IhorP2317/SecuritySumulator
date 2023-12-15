@@ -2,9 +2,11 @@ package com.securitySimulator.controller.data;
 
 import com.securitySimulator.payload.response.MessageResponse;
 import com.securitySimulator.repository.BuildingRepository;
+import com.securitySimulator.repository.SensorRepository;
 import com.securitySimulator.services.SecuritySystemSimulation;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,9 +19,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/data/simulation")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
+@ComponentScan
 public class SimulationController {
     @Autowired
     BuildingRepository buildingRepository;
+    @Autowired
+    SensorRepository sensorRepository;
 
     @Getter
     private SecuritySystemSimulation securitySystemSimulation;
@@ -28,15 +33,23 @@ public class SimulationController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> configureSimulation(){
 
-        try {
-            if(getSecuritySystemSimulation().configureSimulation()){
+            var allSensors = sensorRepository.findAll();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getSecuritySystemSimulation().configureSimulation();
+                    }
+                    catch (IOException e) {
+
+                    }
+                }
+            }).start();
+
+            if(!allSensors.isEmpty()){
                 return new ResponseEntity<>(HttpStatus.OK);
             }
-        } catch (IOException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("input/output socket error");
-        }
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("configuration couldn't start due to internal error");

@@ -50,7 +50,7 @@ public class DataSeeder{
     public void run() {
         List<Room> rooms = new ArrayList<>();
         NormativeType normativeType;
-        for (int i = 0; i < 200; i++){
+        for (int i = 0; i < 2000; i++){
             if(i % 2 == 0){
                 normativeType = NormativeType.Common;
             } else {
@@ -118,7 +118,7 @@ public class DataSeeder{
                 tmpTo = apartments.size();
             }
 
-            var newbuilding = new Building("address", getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
+            var newbuilding = new Building(getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
             var apartlist = apartments.subList(tmpFrom, tmpTo);
 
             apartlist.forEach(a -> a.setBuilding(newbuilding));
@@ -128,6 +128,11 @@ public class DataSeeder{
             buildings.add(newbuilding);
             tmpFrom = tmpTo;
         }
+
+        buildingRepository.saveAll(buildings);
+
+        apartmentRepository.saveAll(apartments);
+        apartments = apartmentRepository.findAll();
 
         List<User> users = new ArrayList<>();
 
@@ -544,30 +549,41 @@ public class DataSeeder{
                 )
         );
 
-
-        for(int tmpFrom = 0, tmpTo = 0; tmpTo < buildings.size();){
-            tmpTo = random.nextInt(tmpFrom + 1, tmpFrom + 4);
-            if(tmpTo >= buildings.size() - 4){
-                tmpTo = buildings.size();
+        for(int tmpFrom = 0, tmpTo = 0; tmpTo < apartments.size();){
+            tmpTo = random.nextInt(tmpFrom + 1, tmpFrom + 20);
+            if(tmpTo >= apartments.size() - 20){
+                tmpTo = apartments.size();
             }
+
+            var newbuilding = new Building(getRandomBigDecimalInRange(new BigDecimal("49.8222835"),new BigDecimal("49.8523979")).toString(), getRandomBigDecimalInRange(new BigDecimal("24.0210356"), new BigDecimal("24.0485014")).toString());
+            var apartlist = apartments.subList(tmpFrom, tmpTo);
+
+            apartlist.forEach(a -> a.setBuilding(newbuilding));
+
+            newbuilding.setApartments(apartlist);
+
+            buildings.add(newbuilding);
+            tmpFrom = tmpTo;
+        }
+
+        for(int i = 0; i < userData.size(); ++i){
             Role role = roles.get(random.nextInt(0, roles.size()));
             Set<Role> roleSet = new HashSet<>();
             roleSet.add(role);
 
-
-            var newuser = new User(userData.get(tmpFrom).a, userData.get(tmpFrom).b, encoder.encode("defaultpassword"));
-
+            var newuser = new User(userData.get(i).a, userData.get(i).b, encoder.encode("defaultpassword"));
             newuser.setRoles(roleSet);
-            var buildinglist = buildings.subList(tmpFrom, tmpTo);
 
-            buildinglist.forEach(b -> b.setUser(newuser));
-            newuser.setBuildings(buildinglist);
+//            var aMid = random.nextInt(0, apartments.size()-5);
+            var aFrom = random.nextInt(0, apartments.size()-10);
+            var aTo = random.nextInt(aFrom + 2, aFrom + 10);
+            newuser.setApartments(apartments.subList(aFrom,
+                    aTo));
 
             users.add(newuser);
-            tmpFrom = tmpTo;
         }
-        userRepository.saveAll(users);
 
+        userRepository.saveAll(users);
     }
 
 

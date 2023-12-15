@@ -20,7 +20,6 @@ import com.securitySimulator.repository.ApartmentRepository;
 
 //http://localhost:8080/swagger-ui/index.html
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/data/apartments")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_USER')")
@@ -56,11 +55,7 @@ public class ApartmentController {
         if (UserData.isPresent()) {
 
             var user = UserData.get();
-
-            List<Apartment> apartments = new ArrayList<>();
-
-            user.getBuildings().forEach(b -> apartments.addAll(b.getApartments()));
-            return new ResponseEntity<>(apartments, HttpStatus.OK);
+            return new ResponseEntity<>(user.getApartments(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

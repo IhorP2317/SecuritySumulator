@@ -27,6 +27,7 @@ public class Sensor{
     Room room;
 
     public Sensor(){
+        isViolationDetected = false;
     }
     @Override
     public String toString() {

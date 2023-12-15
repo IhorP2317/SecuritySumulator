@@ -8,10 +8,7 @@ import com.securitySimulator.model.sensor.Sensor;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.lang.Nullable;
 
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,7 +18,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Rooms")
-public class Room extends BuildingComposite{
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -58,18 +55,5 @@ public class Room extends BuildingComposite{
         this.amountOfDoors = amountOfDoors;
         this.amountOfWindows = amountOfWindows;
         this.normativeType = normativeType;
-    }
-
-    @JsonIgnore
-    @Transient
-    @Override
-    public List<Sensor> getAllSensors() {
-        return sensorsForRoom;
-    }
-    @JsonIgnore
-    @Transient
-    @Override
-    public String getFullAddress() {
-        return floor != null ? floor.getFullAddress() + ' ' + getId().toString() : "";
     }
 }

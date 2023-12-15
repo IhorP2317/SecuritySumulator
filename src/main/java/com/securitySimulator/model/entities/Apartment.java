@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.securitySimulator.model.sensor.Sensor;
+import com.securitySimulator.model.user.User;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -21,7 +22,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Apartments")
-public class Apartment extends BuildingComposite{
+public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -31,7 +32,7 @@ public class Apartment extends BuildingComposite{
     @JsonBackReference
     Building building;
 
-    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     List<Floor> floors;
 
@@ -42,20 +43,5 @@ public class Apartment extends BuildingComposite{
 
     public Apartment(List<Floor> floors) {
         this.floors = floors;
-    }
-
-    @JsonIgnore
-    @Override
-    public List<Sensor> getAllSensors() {
-        List<Sensor> sensors = new ArrayList<>();
-
-        floors.forEach(f -> sensors.addAll(f.getAllSensors()));
-
-        return sensors;
-    }
-    @JsonIgnore
-    @Override
-    public String getFullAddress() {
-        return building != null ? building.getFullAddress() + ' ' + getId().toString() : "";
     }
 }

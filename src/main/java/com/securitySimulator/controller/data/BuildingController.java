@@ -49,11 +49,16 @@ public class BuildingController {
 
         if (UserData.isPresent()) {
             var user = UserData.get();
+            var userApartments = user.getApartments();
+            Optional<List<Building>> buildingsWithUserApartments =
+                    buildingRepository.findByApartmentsIn(userApartments);
 
-            return new ResponseEntity<>(user.getBuildings(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (buildingsWithUserApartments.isPresent()) {
+                return new ResponseEntity<>(buildingsWithUserApartments.get(), HttpStatus.OK);
+            }
         }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/getBuildingById/{id}")
@@ -71,7 +76,7 @@ public class BuildingController {
     public ResponseEntity<Building> createBuilding(@RequestBody Building Building) {
         try {
             Building _Building = buildingRepository
-                    .save(new Building(Building.getId(), Building.getAddress(), Building.getCoordinateX(), Building.getCoordinateY(), Building.getApartments(), Building.getUser()));
+                    .save(new Building(Building.getId(), Building.getCoordinateX(), Building.getCoordinateY(), Building.getApartments()));
             return new ResponseEntity<>(_Building, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

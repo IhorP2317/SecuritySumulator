@@ -19,7 +19,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "Floors")
-public class Floor extends BuildingComposite{
+public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -35,7 +35,6 @@ public class Floor extends BuildingComposite{
     @JsonManagedReference
     List<Room> rooms;
 
-
     public Floor(Integer id, Integer number, List<Room> rooms) {
         this.id = id;
         this.number = number;
@@ -44,21 +43,6 @@ public class Floor extends BuildingComposite{
 
     public Floor(Integer number) {
         this.number = number;
-    }
-
-    @JsonIgnore
-    @Override
-    public List<Sensor> getAllSensors() {
-        List<Sensor> sensors = new ArrayList<>();
-
-        rooms.forEach(r -> sensors.addAll(r.getAllSensors()));
-
-        return sensors;
-    }
-    @JsonIgnore
-    @Override
-    public String getFullAddress() {
-        return apartment != null ? apartment.getFullAddress() + ' ' + number.toString() : "";
     }
 }
 

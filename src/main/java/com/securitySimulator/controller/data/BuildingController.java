@@ -72,6 +72,17 @@ public class BuildingController {
         }
     }
 
+    @GetMapping("/isInBuildingViolation/{id}")
+    public ResponseEntity<Building> getBuildingById(@PathVariable("id") long id) {
+        Optional<Building> BuildingData = buildingRepository.findById(id);
+
+        if (BuildingData.isPresent()) {
+            return new ResponseEntity<>(BuildingData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Building> createBuilding(@RequestBody Building Building) {
         try {

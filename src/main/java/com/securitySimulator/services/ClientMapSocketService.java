@@ -22,21 +22,26 @@ public class ClientMapSocketService {
         log.info("client connected");
     }
 
-    public void SendInfo(Object obj) throws IOException {
+    public void SendInfo(Object obj) {
         ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = "";
+        try {
+            jsonString = objectMapper.writeValueAsString(obj);
 
-        String jsonString = objectMapper.writeValueAsString(obj);
+            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        } catch (Exception e) {
+            log.error("halepa 1");
+        }
 
         try {
-            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
             out.write(jsonString);
-            out.flush();
-
-        } finally {
-            clientSocket.close();
-            out.close();
+        } catch (Exception e) {
+            log.error("halepa 2: " + jsonString);
         }
+
+//        } finally {
+//            //out.close();
+//        }
     }
 
     public void StopConnection() throws IOException {

@@ -91,7 +91,7 @@ public class SecuritySystemSimulation {
                             sensor instanceof MotionSensor ? ViolationType.Movement : ViolationType.Temperature));
                 }
             }
-             catch (IOException e) {
+             catch (Exception e) {
                 log.error("Error in checking db update thread: {}", e.getMessage());
                 Thread.currentThread().interrupt();
             }

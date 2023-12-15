@@ -63,7 +63,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
-                                .requestMatchers("/socket.io/**").permitAll()
+                                .requestMatchers("/api/data/simulation/**").permitAll()
                 )
                 .cors().disable()
                 .csrf().disable();
@@ -73,6 +73,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/data/**").authenticated()
+                                .requestMatchers("/socket.io/**").authenticated()
                 )
                 .cors();
 

@@ -23,14 +23,14 @@ public class SecuritySystemSimulation {
     SensorRepository sensorRepository;
     private ExecutorService simulationThreadPool;
     private List<Sensor> allSensors;
-    private ClientMapSocketService clientMapSocketService;
+//    private ClientMapSocketService clientMapSocketService;
     @Getter
     private SimulationMemento simulationMemento;
 
     public boolean configureSimulation() throws IOException {
         allSensors = sensorRepository.findAll();
         log.info("configuring simulation");
-        clientMapSocketService = new ClientMapSocketService();
+//        clientMapSocketService = new ClientMapSocketService();
         this.simulationThreadPool = Executors.newFixedThreadPool(3);
         runSimulation();
         return !allSensors.isEmpty();
@@ -40,7 +40,7 @@ public class SecuritySystemSimulation {
         log.info("starting threads");
         simulationThreadPool.submit(() -> processViolationEvents());
         simulationThreadPool.submit(() -> processViolationEvents());
-        simulationThreadPool.submit(() -> CheckDbSensors());
+//        simulationThreadPool.submit(() -> CheckDbSensors());
     }
 
     private void processViolationEvents() {
@@ -77,32 +77,32 @@ public class SecuritySystemSimulation {
         }
     }
 
-    //checking db in cycle to send message through socket to client when sensor is changed
-    public void CheckDbSensors(){
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-
-                var sensors = sensorRepository.findAll();
-
-                var violatedSensor = sensors.stream().filter(Sensor::getIsViolationDetected).findFirst();
-                if(violatedSensor.isPresent()){
-                    var sensor = violatedSensor.get();
-                    clientMapSocketService.SendInfo(new ViolationDTO(sensor.getId(),
-                            sensor instanceof MotionSensor ? ViolationType.Movement : ViolationType.Temperature));
-                }
-            }
-             catch (Exception e) {
-                log.error("Error in checking db update thread: {}", e.getMessage());
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
+//    //checking db in cycle to send message through socket to client when sensor is changed
+//    public void CheckDbSensors(){
+//        while (!Thread.currentThread().isInterrupted()) {
+//            try {
+//
+//                var sensors = sensorRepository.findAll();
+//
+//                var violatedSensor = sensors.stream().filter(Sensor::getIsViolationDetected).findFirst();
+//                if(violatedSensor.isPresent()){
+//                    var sensor = violatedSensor.get();
+//                    clientMapSocketService.SendInfo(new ViolationDTO(sensor.getId(),
+//                            sensor instanceof MotionSensor ? ViolationType.Movement : ViolationType.Temperature));
+//                }
+//            }
+//             catch (Exception e) {
+//                log.error("Error in checking db update thread: {}", e.getMessage());
+//                Thread.currentThread().interrupt();
+//            }
+//        }
+//    }
 
     public void shutdown(){
         try {
             log.info("stopping all threads in thread pool");
             this.simulationThreadPool.shutdownNow();
-            clientMapSocketService.StopConnection();
+//            clientMapSocketService.StopConnection();
         }
         catch (Exception e) {
             log.error("Error in stopping threads: {}", e.getMessage());
@@ -114,7 +114,7 @@ public class SecuritySystemSimulation {
             log.info("pausing simulation");
             getSimulationMemento().SaveInToFile();
             this.simulationThreadPool.shutdownNow();
-            clientMapSocketService.StopConnection();
+//            clientMapSocketService.StopConnection();
         }
         catch (Exception e) {
             log.error("Error in pausing simulation thread: {}", e.getMessage());
